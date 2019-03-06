@@ -5,9 +5,9 @@ networks:
 
 services:
 
-  orderer.manufacturer.tracechain.com:
+  orderer.tracechain.com:
     image: hyperledger/fabric-orderer:${IMAGE_TAG}
-    container_name: orderer.manufacturer.tracechain.com
+    container_name: orderer.tracechain.com
     tty: true
     environment:
       - ORDERER_GENERAL_LOGLEVEL=debug
@@ -33,7 +33,7 @@ services:
     networks:
       default:
         aliases:
-          - orderer.manufacturer.tracechain.com
+          - orderer.tracechain.com
 
   ca.manufacturer.tracechain.com:
     image: hyperledger/fabric-ca:${IMAGE_TAG}
@@ -77,7 +77,7 @@ services:
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
       - CORE_PEER_GOSSIP_ORGLEADER=false
       - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
-      - CORE_PEER_LOCALMSPID=manufacturer.tracechain.com
+      - CORE_PEER_LOCALMSPID=ManufacturerMSP
       - CORE_PEER_MSPCONFIGPATH=/var/hyperledger/msp
       - CORE_PEER_TLS_SERVERHOSTOVERRIDE=peer0.manufacturer.tracechain.com
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
@@ -90,9 +90,9 @@ services:
       - 7051:7051
       - 7053:7053
     depends_on:
-      - orderer.manufacturer.tracechain.com
+      - orderer.tracechain.com
     links:
-      - orderer.manufacturer.tracechain.com
+      - orderer.tracechain.com
     networks:
       default:
         aliases:
@@ -118,7 +118,7 @@ services:
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
       - CORE_PEER_GOSSIP_ORGLEADER=false
       - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
-      - CORE_PEER_LOCALMSPID=manufacturer.tracechain.com
+      - CORE_PEER_LOCALMSPID=ManufacturerMSP
       - CORE_PEER_MSPCONFIGPATH=/var/hyperledger/msp
       - CORE_PEER_TLS_SERVERHOSTOVERRIDE=peer1.manufacturer.tracechain.com
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
@@ -131,9 +131,9 @@ services:
       - 8051:7051
       - 8053:7053
     depends_on:
-      - orderer.manufacturer.tracechain.com
+      - orderer.tracechain.com
     links:
-      - orderer.manufacturer.tracechain.com
+      - orderer.tracechain.com
     networks:
       default:
         aliases:

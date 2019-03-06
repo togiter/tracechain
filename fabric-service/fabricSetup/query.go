@@ -3,8 +3,8 @@ package fabricSetup
 import (
 	"encoding/json"
 	"fmt"
-	"genealogy/fabric-service/models"
 	"github.com/hyperledger/fabric-sdk-go/pkg/client/channel"
+	"github.com/tracechain/fabric-service/models"
 )
 
 func (fs *FabricSetup) QueryMember(memberId string) (string, error) {

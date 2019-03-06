@@ -2,28 +2,29 @@ package main
 
 import (
 	"fmt"
-	"genealogy/fabric-service/fabricSetup"
-	"genealogy/web-service"
-	"genealogy/web-service/controller"
+	"github.com/tracechain/fabric-service/fabricSetup"
+	"github.com/tracechain/web-service"
+	"github.com/tracechain/web-service/controller"
 	"os"
 )
 
 func main() {
 	fSetup := fabricSetup.FabricSetup{
-		OrdererID: "orderer.genealogy.com",
+		OrdererID: "orderer.tracechain.com",
 
-		ChannelID:     "genealogychannel",
-		ChannelConfig: os.Getenv("GOPATH") + "/src/genealogy/networkConfig/channel-artifacts/channel.tx",
+		ChannelID:     "tracechain",
+		ChannelConfig: os.Getenv("GOPATH") + "/src/github.com//tracechain/network/artifacts/tracechain.tx",
 
-		ChaincodeID:       "genealoyChaincode",
+		ChaincodeID:       "tracechaincode",
 		ChaincodeVersion:  "v0",
 		ChaincodeGoPath:   os.Getenv("GOPATH"),
-		ChaincodePath:     "genealogy/fabric-service/chaincode",
-		OrgAdmin:          "admin",
-		OrgName:           "Org1",
-		ConnectionProfile: "fabric-service/fabricSetup/connectionprofile.yaml",
+		ChaincodePath:     "github.com/tracechain/fabric-service/chaincode",
+		OrgAdmin:          "Admin",
+		OrgName:           "Manufacturer",
+		OrgPeer0:          "peer0.manufacturer.tracechain.com",
+		ConnectionProfile: "./fabric-service/fabricSetup/connectionprofile.yaml",
 
-		UserName: "user1",
+		UserName: "User1",
 	}
 	err := fSetup.Initialize()
 	if err != nil {

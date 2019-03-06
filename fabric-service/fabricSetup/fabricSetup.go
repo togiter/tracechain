@@ -54,11 +54,13 @@ func (setup *FabricSetup) Initialize() error {
 	//返回资源管理上下文 contextApi.ClientProvider
 	rmCtx := setup.sdk.Context(fabsdk.WithUser(setup.OrgAdmin), fabsdk.WithOrg(setup.OrgName))
 	if rmCtx == nil {
+		fmt.Println("根据指定的组织名称orgName与管理员OrgAdmin创建资源管理客户端Context失败")
 		return errors.New("根据指定的组织名称orgName与管理员OrgAdmin创建资源管理客户端Context失败")
 	}
 	//创建资源管理器管理通道的创建或更新
 	rmCli, err := resmgmt.New(rmCtx)
 	if err != nil {
+		fmt.Println("资源管理器创建失败:%v", err)
 		return errors.WithMessage(err, "资源管理器创建失败！")
 	}
 	setup.rmCli = rmCli
@@ -67,12 +69,14 @@ func (setup *FabricSetup) Initialize() error {
 	//msp client允许我们从用户的identify检索用户信息
 	mspCli, err := mspclient.New(sdk.Context(), mspclient.WithOrg(setup.OrgName))
 	if err != nil {
+		fmt.Println("failed to create msp client")
 		return errors.WithMessage(err, "failed to create msp client")
 	}
 
 	//获取用户身份admin
 	adminID, err := mspCli.GetSigningIdentity(setup.OrgAdmin)
 	if err != nil {
+		fmt.Println("failed to query channel")
 		return errors.WithMessage(err, "failed to query channel")
 	}
 	channelHasInstalled := false
@@ -89,13 +93,15 @@ func (setup *FabricSetup) Initialize() error {
 	if !channelHasInstalled {
 		//创建通道
 		chReq := resmgmt.SaveChannelRequest{ChannelID: setup.ChannelID, ChannelConfigPath: setup.ChannelConfig, SigningIdentities: []msp.SigningIdentity{adminID}}
-		txID, err := setup.rmCli.SaveChannel(chReq, resmgmt.WithTargetEndpoints(setup.OrdererID))
+		txID, err := setup.rmCli.SaveChannel(chReq, resmgmt.WithOrdererEndpoint(setup.OrdererID))
 		if err != nil || txID.TransactionID == "" {
+			fmt.Println("faild to save channel:%v", err)
 			return errors.WithMessage(err, "faild to save channel")
 		}
 		fmt.Println("Channel created")
 		//加入通道
 		if err = setup.rmCli.JoinChannel(setup.ChannelID, resmgmt.WithRetry(retry.DefaultResMgmtOpts), resmgmt.WithOrdererEndpoint(setup.OrdererID)); err != nil {
+			fmt.Println("faild to join channel:%v", err)
 			return errors.WithMessage(err, "failed to join channel")
 		}
 		fmt.Println("channel joined successed")
@@ -157,7 +163,7 @@ func (setup *FabricSetup) InstallAndInstantiateCC() error {
 	// ccPolicy := cauthdsl.SignedByAnyMember([]string{"fbi.citizens.com"})
 	if !ccHasInstantiated {
 		//msp名称，非域名
-		ccPolicy := cauthdsl.SignedByAnyMember([]string{"Org1MSP"})
+		ccPolicy := cauthdsl.SignedByAnyMember([]string{"Manufacturer"})
 		req := resmgmt.InstantiateCCRequest{Name: setup.ChaincodeID, Path: setup.ChaincodeGoPath, Version: setup.ChaincodeVersion, Policy: ccPolicy}
 
 		resp, err := setup.rmCli.InstantiateCC(setup.ChannelID, req)

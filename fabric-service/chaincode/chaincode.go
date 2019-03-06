@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
-	"genealogy/fabric-service/models"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
+	"github.com/tracechain/fabric-service/models"
+	"log"
 )
 
 //联盟链

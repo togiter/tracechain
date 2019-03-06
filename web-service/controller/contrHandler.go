@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"genealogy/fabric-service/fabricSetup"
+	"github.com/tracechain/fabric-service/fabricSetup"
 	"net/http"
 )
 

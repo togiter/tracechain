@@ -2,7 +2,7 @@ package webServer
 
 import (
 	"fmt"
-	"genealogy/web-service/controller"
+	"github.com/tracechain/web-service/controller"
 	"net/http"
 )
 
