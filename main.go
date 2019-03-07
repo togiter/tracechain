@@ -17,7 +17,7 @@ func main() {
 		ChaincodeID:       "tracechaincode",
 		ChaincodeVersion:  "v0",
 		ChaincodeGoPath:   os.Getenv("GOPATH"),
-		ChaincodePath:     "github.com/tracechain/fabric-service/chaincode",
+		ChaincodePath:     "github.com/tracechain/fabric-service/memberChaincode",
 		OrgAdmin:          "Admin",
 		OrgName:           "ManufacturerMSP",
 		OrgPeer0:          "peer0.manufacturer.tracechain.com",
