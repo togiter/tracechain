@@ -2,29 +2,27 @@ package main
 
 import (
 	"fmt"
-	"github.com/tracechain/fabric-service/fabricSetup"
-	"github.com/tracechain/web-service"
-	"github.com/tracechain/web-service/controller"
 	"os"
+
+	"github.com/tracechain/fabric-service/fabricSetup"
+	webServer "github.com/tracechain/web-service"
+	"github.com/tracechain/web-service/controller"
 )
 
 func main() {
 	fSetup := fabricSetup.FabricSetup{
-		OrdererID: "orderer.tracechain.com",
-
-		ChannelID:     "tracechain",
-		ChannelConfig: os.Getenv("GOPATH") + "/src/github.com//tracechain/network/artifacts/tracechain.tx",
-
+		OrdererID:         "orderer.tracechain.com",
+		ChannelID:         "tracechain",
+		ChannelConfig:     os.Getenv("GOPATH") + "/src/github.com//tracechain/network/artifacts/tracechain.tx",
 		ChaincodeID:       "tracechaincode",
 		ChaincodeVersion:  "v0",
 		ChaincodeGoPath:   os.Getenv("GOPATH"),
 		ChaincodePath:     "github.com/tracechain/fabric-service/chaincode",
 		OrgAdmin:          "Admin",
-		OrgName:           "Manufacturer",
+		OrgName:           "ManufacturerMSP",
 		OrgPeer0:          "peer0.manufacturer.tracechain.com",
 		ConnectionProfile: "./fabric-service/fabricSetup/connectionprofile.yaml",
-
-		UserName: "User1",
+		UserName:          "User1",
 	}
 	err := fSetup.Initialize()
 	if err != nil {

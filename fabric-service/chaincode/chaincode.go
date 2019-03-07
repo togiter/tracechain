@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
+
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
 	"github.com/tracechain/fabric-service/models"
-	"log"
 )
 
 //联盟链
@@ -44,7 +45,7 @@ func (ac *AllianceChain) addMember(stub shim.ChaincodeStubInterface, args []stri
 	}
 	key := args[0]
 	value := args[1] //json对象
-	member := Member{}
+	member := models.Member{}
 	err := json.Unmarshal([]byte(value), &member)
 	if err != nil {
 		return shim.Error("add member failed;parameters cannot be parsed into json objects")

@@ -2,6 +2,8 @@ package fabricSetup
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/hyperledger/fabric-sdk-go/pkg/client/channel"
 	"github.com/hyperledger/fabric-sdk-go/pkg/client/event"
 	mspclient "github.com/hyperledger/fabric-sdk-go/pkg/client/msp"
@@ -13,7 +15,6 @@ import (
 	"github.com/hyperledger/fabric-sdk-go/pkg/fabsdk"
 	"github.com/hyperledger/fabric-sdk-go/third_party/github.com/hyperledger/fabric/common/cauthdsl"
 	"github.com/pkg/errors"
-	"strings"
 )
 
 type FabricSetup struct {
@@ -163,7 +164,7 @@ func (setup *FabricSetup) InstallAndInstantiateCC() error {
 	// ccPolicy := cauthdsl.SignedByAnyMember([]string{"fbi.citizens.com"})
 	if !ccHasInstantiated {
 		//msp名称，非域名
-		ccPolicy := cauthdsl.SignedByAnyMember([]string{"Manufacturer"})
+		ccPolicy := cauthdsl.SignedByAnyMember([]string{"ManufacturerMSP"})
 		req := resmgmt.InstantiateCCRequest{Name: setup.ChaincodeID, Path: setup.ChaincodeGoPath, Version: setup.ChaincodeVersion, Policy: ccPolicy}
 
 		resp, err := setup.rmCli.InstantiateCC(setup.ChannelID, req)
