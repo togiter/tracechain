@@ -23,5 +23,4 @@ func (fs *FabricSetup) QueryMember(memberId string) (string, error) {
 	err = json.Unmarshal([]byte(resp.Payload), &member)
 	fmt.Printf(string(resp.Payload))
 	return string(resp.Payload), nil
-
 }

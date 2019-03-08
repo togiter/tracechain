@@ -8,7 +8,7 @@ import (
 )
 
 func showView(w http.ResponseWriter, r *http.Request, templateName string, data interface{}) {
-	page := filepath.Join("web-service", "html", templateName)
+	page := filepath.Join("web-service", "templates", templateName)
 
 	// 创建模板实例
 	resultTemplate, err := template.ParseFiles(page)

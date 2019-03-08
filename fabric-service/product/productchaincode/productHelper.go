@@ -61,13 +61,13 @@ func (pc *ProductChaincode) IssueProduct(stub shim.ChaincodeStubInterface, args 
 func (pc *ProductChaincode) TransferProduct(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	//0			1 		2
 	//newowner  number   price
-	if len(args) < 3 {
+	if len(args) < 2 {
 		return shim.Error("Incorrect nember of arguments,Expecting 3")
 	}
 	nOwner := args[0]
 	number := args[1]
-	price := args[2]
-	fmt.Println("--start tansfer ", nOwner, number, price)
+
+	fmt.Println("--start tansfer ", nOwner, number)
 	valBytes, err := stub.GetState(number)
 	if err != nil {
 		return shim.Error("Failed to get product:" + err.Error())
@@ -80,7 +80,10 @@ func (pc *ProductChaincode) TransferProduct(stub shim.ChaincodeStubInterface, ar
 		return shim.Error(err.Error())
 	}
 	prodcutTo.Owner = nOwner
-	prodcutTo.Price = price
+	if len(args) >= 3 {
+		price := args[2]
+		prodcutTo.Price = price
+	}
 	productBytes, _ := json.Marshal(prodcutTo)
 	err = stub.PutState(number, productBytes)
 	if err != nil {
