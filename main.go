@@ -21,7 +21,7 @@ func main() {
 		OrgAdmin:          "Admin",
 		OrgName:           "ManufacturerMSP",
 		OrgPeer0:          "peer0.manufacturer.tracechain.com",
-		ConnectionProfile: "./fabric-service/fabricSetup/connectionprofile.yaml",
+		ConnectionProfile: os.Getenv("GOPATH") + "/src/github.com//tracechain/fabric-service/fabricSetup/connectionprofile.yaml",
 		UserName:          "User1",
 	}
 	err := fSetup.Initialize()

@@ -44,6 +44,7 @@ func (setup *FabricSetup) Initialize() error {
 	if setup.initialized {
 		return errors.New("sdk已经初始化...")
 	}
+	fmt.Println("sdk初始化开始:%v", err)
 	sdk, err := fabsdk.New(config.FromFile(setup.ConnectionProfile))
 	if err != nil {
 		fmt.Println("sdk初始化失败:%v", err)
