@@ -17,11 +17,11 @@ func main() {
 		ChaincodeID:       "productchaincode",
 		ChaincodeVersion:  "v0",
 		ChaincodeGoPath:   os.Getenv("GOPATH"),
-		ChaincodePath:     "github.com/tracechain/fabric-service/product/productcode",
+		ChaincodePath:     "github.com/tracechain/chaincode/",
 		OrgAdmin:          "Admin",
-		OrgName:           "ManufacturerMSP",
+		OrgName:           "Manufacturer",
 		OrgPeer0:          "peer0.manufacturer.tracechain.com",
-		ConnectionProfile: os.Getenv("GOPATH") + "/src/github.com//tracechain/fabric-service/fabricSetup/connectionprofile.yaml",
+		ConnectionProfile: os.Getenv("GOPATH") + "/src/github.com/tracechain/fabric-service/fabricSetup/connectionprofile.yaml",
 		UserName:          "User1",
 	}
 	err := fSetup.Initialize()

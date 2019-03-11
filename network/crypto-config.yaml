@@ -24,7 +24,7 @@ PeerOrgs:
   # ---------------------------------------------------------------------------
   - Name: Manufacturer
     Domain: manufacturer.tracechain.com
-    EnableNodeOUs: false
+    EnableNodeOUs: true
     Template:
       Count: 2
     Users:

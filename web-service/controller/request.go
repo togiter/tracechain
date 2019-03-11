@@ -3,91 +3,91 @@ package controller
 import (
 	"fmt"
 	"net/http"
-	"github.com/tracechain/fabric-service/product"
+	// "github.com/tracechain/fabric-service/fabricSetup"
 )
 
-func (app *Application)IssueProduct(w http.ResponseWriter,r *http.Request){
+func (app *Application) IssueProduct(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	fmt.Println("requesting Url...",r.URL)
+	fmt.Println("requesting Url...", r.URL)
 	fmt.Println("请求参数:")
-	name := r.Form["name"]
-	number := r.Form["number"]
-	millPrice := r.Form["millPrice"]
-	price := r.Form["price"]
-	color := r.Form["color"]
-	owner := r.Form["owner"]
-	productor := r.Form["productor"]
-	fmt.Printf("name:%s\nnumber:%s\nmillPrice:%s\nprice:%s\ncolor:%s\nowner:%s\nproductor:%s\n",name,millPrice,price,color,owner,productor)
-	result,err := productservice.Issue(app.Fabric,name,number,millPrice,price,color,owner,productor)
+	name := r.PostFormValue("name")
+	number := r.PostFormValue("number")
+	millPrice := r.PostFormValue("millPrice")
+	price := r.PostFormValue("price")
+	color := r.PostFormValue("color")
+	owner := r.PostFormValue("owner")
+	productor := r.PostFormValue("productor")
+	fmt.Printf("name:%s\nnumber:%s\nmillPrice:%s\nprice:%s\ncolor:%s\nowner:%s\nproductor:%s\n", name, millPrice, price, color, owner, productor)
+	result, err := app.Fabric.IssueProduct(name, number, millPrice, price, color, owner, productor)
 	if err != nil {
-		fmt.Println("error:",err)
-		renderTemplate(w,r,"mainlayout",err)
+		fmt.Println("error:", err)
+		renderTemplate(w, r, "mainlayout", err)
 		return
 	}
-	fmt.Println("Issue TX",result)
-	renderTemplate(w,r,"mainlayout",result)
+	fmt.Println("Issue TX", result)
+	renderTemplate(w, r, "mainlayout", result)
 }
 
-func (app *Application)TransferProduct(w http.ResponseWriter,r *http.ReadRequest){
+func (app *Application) TransferProduct(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	fmt.Println("transfering product...")
-	number := r.Form["number"]
-	owner := r.Form["owner"]
-	price := r.Form["price"]
-	fmt.Printf("owner:%s\nnumber:%s\nprice:%s\n",owner,number,price)
-	result,err := productservice.TransferProduct(app.Fabric,owner,number,price)
+	number := r.PostFormValue("number")
+	owner := r.PostFormValue("owner")
+	price := r.PostFormValue("price")
+	fmt.Printf("owner:%s\nnumber:%s\nprice:%s\n", owner, number, price)
+	result, err := app.Fabric.TransferProduct(owner, number, price)
 	if err != nil {
-		fmt.Println("error:",err)
-		renderTemplate(w,r,"mainlayout",err)
+		fmt.Println("error:", err)
+		renderTemplate(w, r, "mainlayout", err)
 		return
 	}
-	fmt.Println("transfer TX:",result)
-	renderTemplate(w,r,"mainlayout",result)
+	fmt.Println("transfer TX:", result)
+	renderTemplate(w, r, "mainlayout", result)
 
 }
 
-func (app *Application)AlterPrice(w http.ResponseWriter,r *http.Request){
+func (app *Application) AlterProductPrice(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	fmt.Println("altering product price...")
-	number := r.Form["number"]
-	owner := r.Form["owner"]
-	price := r.Form["price"]
-	fmt.Printf("owner:%s\nnumber:%s\nprice:%s\n",owner,number,price)
-	result,err := productservice.AlterProductPrice(app.Fabric,owner,number,price)
+	number := r.PostFormValue("number")
+	owner := r.PostFormValue("owner")
+	price := r.PostFormValue("price")
+	fmt.Printf("owner:%s\nnumber:%s\nprice:%s\n", owner, number, price)
+	result, err := app.Fabric.AlterProductPrice(owner, number, price)
 	if err != nil {
-		fmt.Println("error:",err)
-		renderTemplate(w,r,"mainlayout",err)
+		fmt.Println("error:", err)
+		renderTemplate(w, r, "mainlayout", err)
 		return
 	}
-	fmt.Println("alter TX:",result)
-	renderTemplate(w,r,"mainlayout",result)
+	fmt.Println("alter TX:", result)
+	renderTemplate(w, r, "mainlayout", result)
 }
 
-func (app *Application)QueryProductNo(w http.ResponseWriter,r *http.Request){
+func (app *Application) QueryProductNo(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	number := r.Form["number"]
-	fmt.Println(" query product with number:",number)
-	result,err := productservice.QueryProductNo(app.Fabric,number)
+	number := r.Form["number"][0]
+	fmt.Println(" query product with number:", number)
+	result, err := app.Fabric.QueryProductNo(number)
 	if err != nil {
-		fmt.Println("error:",err)
-		renderTemplate(w,r,"mainlayout",err)
+		fmt.Println("error:", err)
+		renderTemplate(w, r, "mainlayout", err)
 		return
 	}
-	fmt.Println("query result:",result)
-	renderTemplate(w,r,"mainlayout",result)
+	fmt.Println("query result:", result)
+	renderTemplate(w, r, "mainlayout", result)
 }
 
-func (app *Application)QueryProductRange(w http.ResponseWriter,r *http.Request){
+func (app *Application) QueryProductRange(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	startkey := r.Form["startKey"]
-	endKey := r.Form["endKey"]
-	fmt.Printf("query range condition:%s~%s",startkey,endKey)
-	result,err := productservice.QueryProductRange(app.Fabric,startkey,endKey)
+	startkey := r.Form["startKey"][0]
+	endKey := r.Form["endKey"][0]
+	fmt.Printf("query range condition:%s~%s", startkey, endKey)
+	result, err := app.Fabric.QueryProductRange(startkey, endKey)
 	if err != nil {
-		fmt.Println("error:",err)
-		renderTemplate(w,r,"mainlayout",err)
+		fmt.Println("error:", err)
+		renderTemplate(w, r, "mainlayout", err)
 		return
 	}
-	fmt.Println("query range result:",result)
-	renderTemplate(w,r,"mainlayout",result)
+	fmt.Println("query range result:", result)
+	renderTemplate(w, r, "mainlayout", result)
 }

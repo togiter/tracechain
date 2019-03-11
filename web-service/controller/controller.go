@@ -2,20 +2,20 @@ package controller
 
 import (
 	"fmt"
+	"github.com/tracechain/fabric-service/fabricSetup"
+	"html/template"
 	"net/http"
 	"os"
 	"path/filepath"
-
-	"github.com/tracechain/fabric-service/fabricSetup"
 )
 
 type Application struct {
 	Fabric *fabricSetup.FabricSetup
 }
 
-func renderTemplate(w http.ResponseWriter, r *http.ReadRequest, template string, data interface{}) {
+func renderTemplate(w http.ResponseWriter, r *http.Request, name string, data interface{}) {
 	//lp := filepath.Join("web-service", "templates", "mainlayout.html")
-	tp := filepath.Join("web-service", "templates", template)
+	tp := filepath.Join("web-service", "templates", name)
 
 	// Return a 404 if the template doesn't exist
 	info, err := os.Stat(tp)
@@ -31,7 +31,7 @@ func renderTemplate(w http.ResponseWriter, r *http.ReadRequest, template string,
 		return
 	}
 
-	retsultTemplate, err := template.ParseFiles(tp)
+	resultTemplate, err := template.ParseFiles(tp)
 	if err != nil {
 		fmt.Println(err.Error())
 		// Return a generic "Internal Server Error" message
@@ -39,7 +39,7 @@ func renderTemplate(w http.ResponseWriter, r *http.ReadRequest, template string,
 		return
 	}
 
-	if err := retsultTemplate.ExecuteTemplate(w, template, data); err != nil {
+	if err := resultTemplate.ExecuteTemplate(w, name, data); err != nil {
 		fmt.Println(err.Error())
 		http.Error(w, http.StatusText(500), 500)
 	}

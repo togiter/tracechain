@@ -9,12 +9,11 @@ import (
 func WebStart(app *controller.Application) {
 	fs := http.FileServer(http.Dir("web-service/static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
-	http.HandleFunc("/", app.IndexView)
-	http.HandleFunc("/index.html", app.IndexView)
-	http.HandleFunc("/add.html", app.AddView)
-	http.HandleFunc("/query.html", app.QueryView)
-	http.HandleFunc("/addMember", app.AddMember)
-	http.HandleFunc("/queryMember", app.QueryMember)
+	http.HandleFunc("/issueProduct", app.IssueProduct)
+	http.HandleFunc("/queryProductNo", app.QueryProductNo)
+	http.HandleFunc("/queryProductRange", app.QueryProductRange)
+	http.HandleFunc("/transferProduct", app.TransferProduct)
+	http.HandleFunc("/alterProductPrice", app.AlterProductPrice)
 	fmt.Println("启动服务器监听,监听端口:9000")
 	err := http.ListenAndServe(":9000", nil)
 	if err != nil {
