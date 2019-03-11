@@ -1,4 +1,4 @@
-package product
+package productservice
 
 import (
 	"encoding/json"
@@ -9,14 +9,8 @@ import (
 )
 
 //发布产品
-name := args[0]
-	number := args[1]
-	millPrice := args[2]
-	price := args[3]
-	color := args[4]
-	owner := args[5]
-	productor := args[6]
-func IssueProduct(sdkInfo fabricSetup.FabricSetup,name string,millPrice string,price string,color string,owner string,productor string) []byte,error {
+
+func IssueProduct(sdkInfo *fabricSetup.FabricSetup,name string,millPrice string,price string,color string,owner string,productor string) []byte,error {
 	if len(number) <= 0 || len(name) <= 0 || len(millPrice) <= 0 || len(price)<= 0 || len(color) <= 0 || len(owner) <= 0 || len(productor) <= 0 {
 		return "",fmt.Errorf("args input error!")
 	}
@@ -64,7 +58,7 @@ func IssueProduct(sdkInfo fabricSetup.FabricSetup,name string,millPrice string,p
 		return string(resp.TransactionID),nil
 }
 //产品转移
-func TransferProduct(sdkInfo fabricSetup.FabricSetup,nOwner string,number string,price string) []byte,error {
+func TransferProduct(sdkInfo *fabricSetup.FabricSetup,nOwner string,number string,price string) []byte,error {
 	if len(nOwner) <= 0 || len(number) <= 0 {
 		return,nil,fmt.Errorf("args input error!")
 	}
