@@ -160,7 +160,7 @@ func (setup *FabricSetup) InstallAndInstantiateCC() error {
 		}
 	}
 	// could not get chConfig cache reference:read configuration for channel peers failed
-
+	fmt.Println("ccHasInstantiated", ccHasInstantiated)
 	// Set up chaincode policy
 	// ccPolicy := cauthdsl.SignedByAnyMember([]string{"fbi.citizens.com"})
 	if !ccHasInstantiated {

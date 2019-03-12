@@ -64,7 +64,13 @@ services:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_VM_DOCKER_ATTACHSTDOUT=true
       - CORE_LOGGING_LEVEL=DEBUG
-      - CORE_PEER_NETWORKID=tracechain
+      - CORE_CHAINCODE_LOGGING_SHIM=debug
+      - CORE_CHAINCODE_LOGGING_LEVEL=debug
+      - CORE_CHAINCODE_BUILDER=hyperledger/fabric-ccenv:amd64-1.4.0
+      - CORE_CHAINCODE_GOLANG_RUNTIME=hyperledger/fabric-baseos:amd64-0.4.14
+      - CORE_CHAINCODE_EXECUTETIMEOUT=120s
+      - CORE_VM_DOCKER_ATTACHSTDOUT=false
+      #- CORE_PEER_NETWORKID=tracechain
       - CORE_PEER_PROFILE_ENABLED=true
       - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_TLS_CERT_FILE=/var/hyperledger/tls/server.crt
@@ -105,7 +111,13 @@ services:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_VM_DOCKER_ATTACHSTDOUT=true
       - CORE_LOGGING_LEVEL=DEBUG
-      - CORE_PEER_NETWORKID=tracechain
+      - CORE_CHAINCODE_LOGGING_SHIM=debug
+      - CORE_CHAINCODE_LOGGING_LEVEL=debug
+      - CORE_CHAINCODE_BUILDER=hyperledger/fabric-ccenv:amd64-1.4.0
+      - CORE_CHAINCODE_GOLANG_RUNTIME=hyperledger/fabric-baseos:amd64-0.4.14
+      - CORE_CHAINCODE_EXECUTETIMEOUT=120s
+      - CORE_VM_DOCKER_ATTACHSTDOUT=false
+      #- CORE_PEER_NETWORKID=tracechain
       - CORE_PEER_PROFILE_ENABLED=true
       - CORE_PEER_TLS_ENABLED=true
       - CORE_PEER_TLS_CERT_FILE=/var/hyperledger/tls/server.crt
@@ -128,8 +140,8 @@ services:
       - ./crypto-config/peerOrganizations/manufacturer.tracechain.com/peers/peer1.manufacturer.tracechain.com/msp:/var/hyperledger/msp
       - ./crypto-config/peerOrganizations/manufacturer.tracechain.com/peers/peer1.manufacturer.tracechain.com/tls:/var/hyperledger/tls
     ports:
-      - 8051:7051
-      - 8053:7053
+      - 7151:7051
+      - 7153:7053
     depends_on:
       - orderer.tracechain.com
     links:

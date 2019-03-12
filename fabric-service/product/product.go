@@ -1,6 +1,6 @@
 package product
 
-type Product struct {
+type ProductC struct {
 	ObjectType string `json:"objectType"`
 	Name       string `json:"name"`
 	Number     string `json:"number"`    //产品编号

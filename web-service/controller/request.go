@@ -17,7 +17,7 @@ func (app *Application) IssueProduct(w http.ResponseWriter, r *http.Request) {
 	color := r.PostFormValue("color")
 	owner := r.PostFormValue("owner")
 	productor := r.PostFormValue("productor")
-	fmt.Printf("name:%s\nnumber:%s\nmillPrice:%s\nprice:%s\ncolor:%s\nowner:%s\nproductor:%s\n", name, millPrice, price, color, owner, productor)
+	fmt.Printf("name:%s\nnumber:%s\nmillPrice:%s\nprice:%s\ncolor:%s\nowner:%s\nproductor:%s\n", name,number, millPrice, price, color, owner, productor)
 	result, err := app.Fabric.IssueProduct(name, number, millPrice, price, color, owner, productor)
 	if err != nil {
 		fmt.Println("error:", err)

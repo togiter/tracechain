@@ -6,13 +6,26 @@ import (
 	"fmt"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	pb "github.com/hyperledger/fabric/protos/peer"
-	"github.com/tracechain/fabric-service/product"
+	// "github.com/tracechain/fabric-service/product"
 )
+
+type Product struct {
+	ObjectType string `json:"objectType"`
+	Name       string `json:"name"`
+	Number     string `json:"number"`    //产品编号
+	MillPrice  string `json:"millPrice"` //出厂价格，不可改变
+	Price      string `json:"price"`
+	Color      string `json:"color"`
+	Owner      string `json:"owner"`     //产品拥有者
+	Productor  string `json:"productor"` //厂家
+}
+
 
 func (pc *ProductChaincode) IssueProduct(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	if len(args) != 7 { //Name,number,millPrice,price,color,owner,productor
 		return shim.Error("args count error")
 	}
+	fmt.Println("call IssueProduct.....")
 	name := args[0]
 	number := args[1]
 	millPrice := args[2]
@@ -30,7 +43,7 @@ func (pc *ProductChaincode) IssueProduct(stub shim.ChaincodeStubInterface, args 
 	}
 
 	objectType := "product"
-	product := product.Product{objectType, name, number, millPrice, price, color, owner, productor}
+	product := Product{objectType, name, number, millPrice, price, color, owner, productor}
 	productBytes, err = json.Marshal(product)
 	if err != nil {
 		fmt.Println("product marshal failed", err)
@@ -41,6 +54,7 @@ func (pc *ProductChaincode) IssueProduct(stub shim.ChaincodeStubInterface, args 
 		fmt.Println("putstate prudct failed")
 		return shim.Error(err.Error())
 	}
+	fmt.Println(" IssueProduct.....succeed")
 	//  ==== Index the marble to enable color-based range queries, e.g. return all blue marbles ====
 	//  An 'index' is a normal key/value entry in state.
 	//  The key is a composite key, with the elements that you want to range query on listed first.
@@ -116,7 +130,7 @@ func (pc *ProductChaincode) AlterProductPrice(stub shim.ChaincodeStubInterface, 
 	} else if productBytes == nil {
 		return shim.Error("product does not exist")
 	}
-	newProduct := product.Product{}
+	newProduct := Product{}
 	err = json.Unmarshal(productBytes, &newProduct)
 	if err != nil {
 		return shim.Error(err.Error())

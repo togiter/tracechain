@@ -14,8 +14,8 @@ func (sdkInfo *FabricSetup) IssueProduct(name string, number string, millPrice s
 	if len(number) <= 0 || len(name) <= 0 || len(millPrice) <= 0 || len(price) <= 0 || len(color) <= 0 || len(owner) <= 0 || len(productor) <= 0 {
 		return "", fmt.Errorf("args input error!")
 	}
-	product := product.Product{
-		ObjectType: "product",
+	product := product.ProductC{
+		ObjectType: "productC",
 		Name:       name,
 		Number:     number,
 		MillPrice:  millPrice,
@@ -164,7 +164,7 @@ func (sdkInfo *FabricSetup) QueryProductNo(productNo string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("failed to query:%v", err)
 	}
-	product := product.Product{}
+	product := product.ProductC{}
 	err = json.Unmarshal([]byte(resp.Payload), &product)
 	fmt.Println("productNo query resp:", resp.Payload)
 	return string(resp.Payload), nil
