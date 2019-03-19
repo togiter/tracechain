@@ -14,7 +14,7 @@
 # Schema version of the content. Used by the SDK to apply the corresponding parsing rules.
 #
 version: 1.0.0
-
+name: "tracechain_default"
 #
 # The client section used by GO SDK.
 #
@@ -118,8 +118,8 @@ channels:
   # Mychannel overrides initialBackoff for discovery
   # multi-org test channel
   tracechain:
-    orderers:
-     - orderer.tracechain.com
+    #orderers:
+    # - orderer.tracechain.com
     peers:
       peer0.manufacturer.tracechain.com:
         endorsingPeer: true
@@ -132,7 +132,7 @@ channels:
         chaincodeQuery: true
         ledgerQuery: true
         eventSource: true
-#     policies:
+    policies:
       #[Optional] options for retrieving channel configuration blocks
       queryChannelConfig:
         #[Optional] min number of success responses (from targets/peers)
@@ -172,12 +172,12 @@ organizations:
 
 
   # Orderer Org name
-  ordererorg:
+  #ordererorg:
       # Membership Service Provider ID for this organization
-      mspID: OrdererMSP
+  #    mspID: OrdererMSP
 
       # Needed to load users crypto keys and certs for this org (absolute path or relative to global crypto path, DEV mode)
-      cryptoPath: ordererOrganizations/tracechain.com/users/Admin@tracechain.com/msp
+  #    cryptoPath: ordererOrganizations/tracechain.com/users/Admin@tracechain.com/msp
 
 
 #
@@ -221,8 +221,17 @@ peers:
     url: localhost:7051
     eventUrl: localhost:7053
 
-    #grpcOptions:
-    #  ssl-target-name-override: peer0.manufacturer.tracechain.com
+    grpcOptions:
+      ssl-target-name-override: peer0.manufacturer.tracechain.com
+      # These parameters should be set in coordination with the keepalive policy on the server,
+      # as incompatible settings can result in closing of connection.
+      # When duration of the 'keep-alive-time' is set to 0 or less the keep alive client parameters are disabled
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      # allow-insecure will be taken into consideration if address has no protocol defined, if true then grpc or else grpcs
+      allow-insecure: false
 
     tlsCACerts:
       # Certificate location absolute path
@@ -230,11 +239,20 @@ peers:
 
   peer1.manufacturer.tracechain.com:
     # this URL is used to send endorsement and query requests
-    url:  localhost:7151
-    eventUrl: localhost:7153
+    url:  localhost:8051
+    eventUrl: localhost:8053
 
-    #grpcOptions:
-    #  ssl-target-name-override: peer1.manufacturer.tracechain.com
+    grpcOptions:
+      ssl-target-name-override: peer1.manufacturer.tracechain.com
+       # These parameters should be set in coordination with the keepalive policy on the server,
+      # as incompatible settings can result in closing of connection.
+      # When duration of the 'keep-alive-time' is set to 0 or less the keep alive client parameters are disabled
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      # allow-insecure will be taken into consideration if address has no protocol defined, if true then grpc or else grpcs
+      allow-insecure: false
 
     tlsCACerts:
       # Certificate location absolute path
@@ -255,11 +273,11 @@ certificateAuthorities:
       # Comma-Separated list of paths
       path: ${GOPATH}/src/github.com/tracechain/network/crypto-config/peerOrganizations/manufacturer.tracechain.com/tlsca/tlsca.manufacturer.tracechain.com-cert.pem
       # Client key and cert for SSL handshake with Fabric CA
-      client:
-        key:
-          path: ${GOPATH}/src/github.com/tracechain/network/crypto-config/peerOrganizations/manufacturer.tracechain.com/users/User1@manufacturer.tracechain.com/tls/client.key
-        cert:
-          path: ${GOPATH}/src/github.com/tracechain/network/crypto-config/peerOrganizations/manufacturer.tracechain.com/users/User1@manufacturer.tracechain.com/tls/client.crt
+      #client:
+        #key:
+          #path: ${GOPATH}/src/github.com/tracechain/network/crypto-config/peerOrganizations/manufacturer.tracechain.com/users/User1@manufacturer.tracechain.com/tls/client.key
+        #cert:
+          #path: ${GOPATH}/src/github.com/tracechain/network/crypto-config/peerOrganizations/manufacturer.tracechain.com/users/User1@manufacturer.tracechain.com/tls/client.crt
 
     # Fabric-CA supports dynamic user enrollment via REST APIs. A "root" user, a.k.a registrar, is
     # needed to enroll and invoke new users.
@@ -268,6 +286,8 @@ certificateAuthorities:
       enrollSecret: adminpw
     # [Optional] The optional name of the CA.
     caName: ca.manufacturer.tracechain.com
+    httpOptions:
+      verify: false
 # EntityMatchers enable substitution of network hostnames with static configurations
  # so that properties can be mapped. Regex can be used for this purpose
 # UrlSubstitutionExp can be empty which means the same network hostname will be used
@@ -287,8 +307,8 @@ entityMatchers:
       mappedHost: peer0.manufacturer.tracechain.com
 
     - pattern: (\w*)peer1.manufacturer.tracechain.com(\w*)
-      urlSubstitutionExp: localhost:7151
-      eventUrlSubstitutionExp: localhost:7153
+      urlSubstitutionExp: localhost:8051
+      eventUrlSubstitutionExp: localhost:8053
       sslTargetOverrideUrlSubstitutionExp: peer1.manufacturer.tracechain.com
       mappedHost: peer1.manufacturer.tracechain.com
 
@@ -301,7 +321,7 @@ entityMatchers:
   certificateAuthority:
     - pattern: (\w*)ca.manufacturer.tracechain.com(\w*)
       urlSubstitutionExp: http://localhost:7054
-#      sslTargetOverrideUrlSubstitutionExp: ca.tracechain.com
+      sslTargetOverrideUrlSubstitutionExp: ca.tracechain.com
       mappedHost: ca.manufacturer.tracechain.com
 #    - pattern: (\w+).org2.tracechain.(\w+)
 #      urlSubstitutionExp:

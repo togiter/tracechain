@@ -22,17 +22,12 @@ type Product struct {
 
 
 func (pc *ProductChaincode) IssueProduct(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	if len(args) != 7 { //Name,number,millPrice,price,color,owner,productor
-		return shim.Error("args count error")
+	if len(args) < 2 {
+		return shim.Error("IssueProduct args count error")
 	}
 	fmt.Println("call IssueProduct.....")
-	name := args[0]
 	number := args[1]
-	millPrice := args[2]
-	price := args[3]
-	color := args[4]
-	owner := args[5]
-	productor := args[6]
+	value := args[2]
 	//check if product already exists
 	productBytes, err := stub.GetState(number)
 	if err != nil {
@@ -41,15 +36,11 @@ func (pc *ProductChaincode) IssueProduct(stub shim.ChaincodeStubInterface, args 
 		fmt.Println("product No already exists:" + number)
 		return shim.Error("product No already exists:" + number)
 	}
-
-	objectType := "product"
-	product := Product{objectType, name, number, millPrice, price, color, owner, productor}
-	productBytes, err = json.Marshal(product)
 	if err != nil {
 		fmt.Println("product marshal failed", err)
 		return shim.Error(err.Error())
 	}
-	err = stub.PutState(number, productBytes)
+	err = stub.PutState(number, []byte(value))
 	if err != nil {
 		fmt.Println("putstate prudct failed")
 		return shim.Error(err.Error())
@@ -76,7 +67,7 @@ func (pc *ProductChaincode) TransferProduct(stub shim.ChaincodeStubInterface, ar
 	//0			1 		2
 	//newowner  number   price
 	if len(args) < 2 {
-		return shim.Error("Incorrect nember of arguments,Expecting 3")
+		return shim.Error("TransferProduct Incorrect nember of arguments,Expecting 3")
 	}
 	nOwner := args[0]
 	number := args[1]
@@ -86,7 +77,7 @@ func (pc *ProductChaincode) TransferProduct(stub shim.ChaincodeStubInterface, ar
 	if err != nil {
 		return shim.Error("Failed to get product:" + err.Error())
 	} else if valBytes == nil {
-		return shim.Error("product number does not exist")
+		return shim.Error("product number does not exist:"+number)
 	}
 	prodcutTo := Product{}
 	err = json.Unmarshal(valBytes, &prodcutTo)
@@ -110,7 +101,7 @@ func (pc *ProductChaincode) AlterProductPrice(stub shim.ChaincodeStubInterface, 
 	//0		 1	   2
 	//owner	number	newPrice
 	if len(args) != 3 {
-		return shim.Error("Incorrect number of argments")
+		return shim.Error("AlterProductPrice Incorrect number of argments")
 	}
 	owner := args[0]
 	number := args[1]
@@ -150,8 +141,8 @@ func (pc *ProductChaincode) AlterProductPrice(stub shim.ChaincodeStubInterface, 
 }
 
 func (pc *ProductChaincode) QueryProductNo(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments")
+	if len(args) < 2 {
+		return shim.Error("QueryProductNo Incorrect number of arguments")
 	}
 	var jsonResp string
 	number := args[0]
@@ -168,18 +159,18 @@ func (pc *ProductChaincode) QueryProductNo(stub shim.ChaincodeStubInterface, arg
 
 func (pc *ProductChaincode) QueryProductRange(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	if len(args) < 2 {
-		return shim.Error("Incorrect number of arguments")
+		return shim.Error("QueryProductRange Incorrect number of arguments")
 	}
 	startKey := args[0]
 	endKey := args[1]
 	retsItr, err := stub.GetStateByRange(startKey, endKey)
 	if err != nil {
-		return shim.Error(err.Error())
+		return shim.Error("range:"+startKey+"~"+endKey+err.Error())
 	}
 	defer retsItr.Close()
 	buf, err := constructQueryResponseFromIterator(retsItr)
 	if err != nil {
-		return shim.Error(err.Error())
+		return shim.Error("range:"+startKey+"~"+endKey+err.Error())
 	}
 	fmt.Println("- get products by range:", buf.String())
 	return shim.Success(buf.Bytes())

@@ -46,6 +46,36 @@ func (app *Application) TransferProduct(w http.ResponseWriter, r *http.Request) 
 
 }
 
+func (app *Application) QueryProducts(w http.ResponseWriter, r *http.Request){
+	r.ParseForm()
+	number := r.PostFormValue("number")
+	startKey := r.PostFormValue("startKey")
+	endKey := r.PostFormValue("endKey")
+	fmt.Printf("number:%s\nstartkey:%s\nendkey:%s\n", number, startKey,endKey)
+	if len(startKey) > 0 && len(endKey) > 0 {
+		fmt.Printf("query range condition:%s~%s", startKey, endKey)
+		result, err := app.Fabric.QueryProductRange(startKey, endKey)
+		if err != nil {
+			fmt.Println("error:", err)
+			renderTemplate(w, r, "mainlayout", err)
+			return
+		}
+		fmt.Println("query result:", result)
+		renderTemplate(w, r, "mainlayout", result)
+	}else{
+		fmt.Println(" query product with number:", number)
+		result, err := app.Fabric.QueryProductNo(number)
+		if err != nil {
+			fmt.Println("error:", err)
+			renderTemplate(w, r, "mainlayout", err)
+			return
+		}
+		fmt.Println("query result:", result)
+		renderTemplate(w, r, "mainlayout", result)
+	}
+	
+}
+
 func (app *Application) AlterProductPrice(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	fmt.Println("altering product price...")
@@ -65,7 +95,7 @@ func (app *Application) AlterProductPrice(w http.ResponseWriter, r *http.Request
 
 func (app *Application) QueryProductNo(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	number := r.Form["number"][0]
+	number := r.PostFormValue("number")
 	fmt.Println(" query product with number:", number)
 	result, err := app.Fabric.QueryProductNo(number)
 	if err != nil {
@@ -79,8 +109,8 @@ func (app *Application) QueryProductNo(w http.ResponseWriter, r *http.Request) {
 
 func (app *Application) QueryProductRange(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	startkey := r.Form["startKey"][0]
-	endKey := r.Form["endKey"][0]
+	startkey := r.PostFormValue("startKey")
+	endKey := r.PostFormValue("endKey")
 	fmt.Printf("query range condition:%s~%s", startkey, endKey)
 	result, err := app.Fabric.QueryProductRange(startkey, endKey)
 	if err != nil {

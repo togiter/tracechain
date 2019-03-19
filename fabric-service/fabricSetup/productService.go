@@ -38,14 +38,18 @@ func (sdkInfo *FabricSetup) IssueProduct(name string, number string, millPrice s
 		return "", fmt.Errorf("event register error!")
 	}
 	defer sdkInfo.chEvent.Unregister(reg)
-
+	fmt.Println("productBytes",productBytes)
+	var params [][]byte 
+	params = append(params,[]byte("IssueProduct"))
+	params = append(params,[]byte(number))
+	params = append(params,productBytes)
 	resp, err := sdkInfo.chCli.Execute(channel.Request{
 		ChaincodeID:  sdkInfo.ChaincodeID,
 		Fcn:          "invoke",
-		Args:         [][]byte{[]byte("IssueProduct"), productBytes},
+		Args:         params,
 		TransientMap: transientDataMap})
 	if err != nil {
-		return "", fmt.Errorf("failed to invoke IssueProduct:%v", err)
+		return "", fmt.Errorf("failed to invoke issueProduct:%v", err)
 	}
 
 	//等待事件回调
@@ -53,7 +57,7 @@ func (sdkInfo *FabricSetup) IssueProduct(name string, number string, millPrice s
 	case ccEvent := <-noti:
 		fmt.Printf("Received CC event:%v\n", ccEvent)
 	case <-time.After(time.Second * 20):
-		return "", fmt.Errorf("did NOT receive CC event for eventId(%s)", eventID)
+		fmt.Printf("did NOT receive CC event for eventId(%s)\n", eventID)
 	}
 	return string(resp.TransactionID), nil
 }
@@ -86,7 +90,7 @@ func (sdkInfo *FabricSetup) TransferProduct(nOwner string, number string, price 
 	case ccEvent := <-noti:
 		fmt.Printf("Received CC event:%v\n", ccEvent)
 	case <-time.After(time.Second * 20):
-		return "", fmt.Errorf("did NOT receive CC event for eventId(%s)", eventID)
+		fmt.Printf("did NOT receive CC event for eventId(%s)", eventID)
 	}
 	return string(resp.TransactionID), nil
 }
@@ -124,7 +128,7 @@ func (sdkInfo *FabricSetup) AlterProductPrice(owner string, number string, price
 	case ccEvent := <-noti:
 		fmt.Printf("Received CC event:%v\n", ccEvent)
 	case <-time.After(time.Second * 20):
-		return "", fmt.Errorf("did NOT receive CC event for eventId(%s)", eventID)
+		fmt.Printf("did NOT receive CC event for eventId(%s)", eventID)
 	}
 	return string(resp.TransactionID), nil
 }
@@ -164,8 +168,7 @@ func (sdkInfo *FabricSetup) QueryProductNo(productNo string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("failed to query:%v", err)
 	}
-	product := product.ProductC{}
-	err = json.Unmarshal([]byte(resp.Payload), &product)
+
 	fmt.Println("productNo query resp:", resp.Payload)
 	return string(resp.Payload), nil
 }

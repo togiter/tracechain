@@ -9,6 +9,9 @@ clear(){
     cd $FABRIC_HOME
     echo "切换fabric版本为"$FABRIC_VERSION
     git checkout $FABRIC_VERSION
+    docker rm -f $(docker ps -aq)
+    docker network prune
+    docker volume prune
 }
 
 

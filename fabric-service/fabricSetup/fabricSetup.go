@@ -153,7 +153,7 @@ func (setup *FabricSetup) InstallAndInstantiateCC() error {
 	ccInstantiatedResp, err := setup.rmCli.QueryInstantiatedChaincodes(setup.ChannelID, resmgmt.WithTargetEndpoints(setup.OrgPeer0))
 	if ccInstantiatedResp.Chaincodes != nil && len(ccInstantiatedResp.Chaincodes) > 0 {
 		for _, chaincodeIno := range ccInstantiatedResp.Chaincodes {
-			fmt.Println(chaincodeIno)
+			fmt.Println("chaincodexx",chaincodeIno)
 			if strings.EqualFold(chaincodeIno.Name, setup.ChaincodeID) {
 				ccHasInstantiated = true
 			}
@@ -173,7 +173,7 @@ func (setup *FabricSetup) InstallAndInstantiateCC() error {
 		if err != nil || resp.TransactionID == "" {
 			return errors.WithMessage(err, "failed to instantiate the chaincode")
 		}
-		fmt.Println("Chaincode instantiated successed")
+		fmt.Println("Chaincode instantiated successed;tx:",resp.TransactionID)
 	} else {
 		fmt.Println("chaincode has instantiated")
 	}
