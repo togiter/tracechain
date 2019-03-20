@@ -26,8 +26,8 @@ func (pc *ProductChaincode) IssueProduct(stub shim.ChaincodeStubInterface, args 
 		return shim.Error("IssueProduct args count error")
 	}
 	fmt.Println("call IssueProduct.....")
-	number := args[1]
-	value := args[2]
+	number := args[0]
+	value := args[1]
 	//check if product already exists
 	productBytes, err := stub.GetState(number)
 	if err != nil {

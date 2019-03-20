@@ -41,7 +41,7 @@ func (sdkInfo *FabricSetup) IssueProduct(name string, number string, millPrice s
 	fmt.Println("productBytes",productBytes)
 	var params [][]byte 
 	params = append(params,[]byte("IssueProduct"))
-	params = append(params,[]byte(number))
+	// params = append(params,[]byte(number))
 	params = append(params,productBytes)
 	resp, err := sdkInfo.chCli.Execute(channel.Request{
 		ChaincodeID:  sdkInfo.ChaincodeID,
