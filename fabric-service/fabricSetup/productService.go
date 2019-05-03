@@ -40,12 +40,12 @@ func (sdkInfo *FabricSetup) IssueProduct(name string, number string, millPrice s
 	defer sdkInfo.chEvent.Unregister(reg)
 	fmt.Println("productBytes",productBytes)
 	var params [][]byte 
-	params = append(params,[]byte("IssueProduct"))
-	// params = append(params,[]byte(number))
+	// params = append(params,[]byte("IssueProduct"))
+	params = append(params,[]byte(number))
 	params = append(params,productBytes)
 	resp, err := sdkInfo.chCli.Execute(channel.Request{
 		ChaincodeID:  sdkInfo.ChaincodeID,
-		Fcn:          "invoke",
+		Fcn:          "issueProduct",
 		Args:         params,
 		TransientMap: transientDataMap})
 	if err != nil {
@@ -78,8 +78,8 @@ func (sdkInfo *FabricSetup) TransferProduct(nOwner string, number string, price 
 
 	resp, err := sdkInfo.chCli.Execute(channel.Request{
 		ChaincodeID:  sdkInfo.ChaincodeID,
-		Fcn:          "invoke",
-		Args:         [][]byte{[]byte("TransferProduct"), []byte(nOwner), []byte(number), []byte(price)},
+		Fcn:          "TransferProduct",
+		Args:         [][]byte{[]byte(nOwner), []byte(number), []byte(price)},
 		TransientMap: transientDataMap})
 	if err != nil {
 		return "", fmt.Errorf("failed to invoke TransferProduct:%v", err)
@@ -116,8 +116,8 @@ func (sdkInfo *FabricSetup) AlterProductPrice(owner string, number string, price
 
 	resp, err := sdkInfo.chCli.Execute(channel.Request{
 		ChaincodeID:  sdkInfo.ChaincodeID,
-		Fcn:          "invoke",
-		Args:         [][]byte{[]byte("AlterProductPrice"), []byte(owner), []byte(number), []byte(price)},
+		Fcn:          "AlterProductPrice",
+		Args:         [][]byte{[]byte(owner), []byte(number), []byte(price)},
 		TransientMap: transientDataMap})
 	if err != nil {
 		return "", fmt.Errorf("failed to invoke AlterProductPrice:%v", err)
@@ -140,8 +140,8 @@ func (sdkInfo *FabricSetup) QueryProductRange(startKey string, endKey string) (s
 	}
 	resp, err := sdkInfo.chCli.Query(channel.Request{
 		ChaincodeID: sdkInfo.ChaincodeID,
-		Fcn:         "invoke",
-		Args:        [][]byte{[]byte("QueryProductRange"), []byte(startKey), []byte(endKey)},
+		Fcn:         "QueryProductRange",
+		Args:        [][]byte{[]byte(startKey), []byte(endKey)},
 	})
 	if err != nil {
 		return "", fmt.Errorf("failed to range query:%v", err)
@@ -156,14 +156,10 @@ func (sdkInfo *FabricSetup) QueryProductNo(productNo string) (string, error) {
 	if len(productNo) <= 0 {
 		return "", fmt.Errorf("参数有误！")
 	}
-	var args []string
-	args = append(args, "invoke")
-	args = append(args, "QueryProductNo")
-	args = append(args, productNo)
 	resp, err := sdkInfo.chCli.Query(channel.Request{
 		ChaincodeID: sdkInfo.ChaincodeID,
-		Fcn:         args[0],
-		Args:        [][]byte{[]byte(args[1]), []byte(args[2])},
+		Fcn:         "QueryProductNo",
+		Args:        [][]byte{[]byte(productNo)},
 	})
 	if err != nil {
 		return "", fmt.Errorf("failed to query:%v", err)

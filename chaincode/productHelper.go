@@ -21,7 +21,7 @@ type Product struct {
 }
 
 
-func (pc *ProductChaincode) IssueProduct(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (pc *ProductChaincode) issueProduct(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	if len(args) < 2 {
 		return shim.Error("IssueProduct args count error")
 	}
@@ -141,7 +141,7 @@ func (pc *ProductChaincode) AlterProductPrice(stub shim.ChaincodeStubInterface, 
 }
 
 func (pc *ProductChaincode) QueryProductNo(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	if len(args) < 2 {
+	if len(args) != 1 {
 		return shim.Error("QueryProductNo Incorrect number of arguments")
 	}
 	var jsonResp string

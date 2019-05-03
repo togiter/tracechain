@@ -17,20 +17,15 @@ func (pc *ProductChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 func (pc *ProductChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	logger.Debugf("[txID %s] ########### ProductChaincode Invoke ###########\n", stub.GetTxID())
 	invokeFunc, args := stub.GetFunctionAndParameters()
-	
-	if invokeFunc != "invoke" {
-		return shim.Error("Recevied unknown function invoke invocation")
-	}
 	// if len(args) < 1 {
 	// 	return shim.Error("Recevied args error!!!!")
 	// }
 	//args := stub.GetStringArgs();
-	function := args[0]
-	params := args[1:]
-	fmt.Printf("function Invoke:%s",function)
+	function := invokeFunc
+	params := args[:]
 	fmt.Printf("Invoke is running:%s" ,function)
-	if function == "IssueProduct" { //发布产品
-		return pc.IssueProduct(stub, params)
+	if function == "issueProduct" { //发布产品
+		return pc.issueProduct(stub, params)
 	} else if function == "TransferProduct" { //改变产品所有权(销售)
 		return pc.TransferProduct(stub, params)
 	} else if function == "AlterProductPrice" { //改变产品价格
